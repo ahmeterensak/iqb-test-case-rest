@@ -1,37 +1,35 @@
 package com.aes.iqbtestcaserest.config;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
+import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
-// @Configuration
-// public class WebConfig {
-//     @Bean
-//     WebMvcConfigurer corsConfig() {
-//         return new WebMvcConfigurer() {
-//             @Override
-//             public void addCorsMappings(CorsRegistry registry) {
-//                 registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE")
-//                         .allowedOrigins("http://localhost:4200/");
-//             }
-//         };
-//     }
-// }
+import com.aes.iqbtestcaserest.model.Course;
+import com.aes.iqbtestcaserest.model.ExamResult;
+import com.aes.iqbtestcaserest.model.Student;
 
 @Configuration
-public class WebConfig {
+public class WebConfig implements RepositoryRestConfigurer {
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // @formatter:off
-        http
-                .authorizeHttpRequests((authz) -> authz
-                                .anyRequest().permitAll()
-                )
-                .csrf(csrf -> csrf
-                        .disable());
-        // @formatter:on
-        return http.build();
-    }
+        @Override
+        public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
+                HttpMethod[] theUnsupportedActions = { HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE,
+                                HttpMethod.PATCH };
+
+                disableHttpMethods(Course.class, config, theUnsupportedActions);
+                disableHttpMethods(ExamResult.class, config, theUnsupportedActions);
+                disableHttpMethods(Student.class, config, theUnsupportedActions);
+
+        }
+
+        private void disableHttpMethods(Class theClass, RepositoryRestConfiguration config,
+                        HttpMethod[] theUnsupportedActions) {
+                config.getExposureConfiguration()
+                                .forDomainType(theClass)
+                                .withItemExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions))
+                                .withCollectionExposure(
+                                                (metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
+        }
 }

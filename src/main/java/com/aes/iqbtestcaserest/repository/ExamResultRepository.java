@@ -5,9 +5,10 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
+import org.springframework.stereotype.Repository;
 import com.aes.iqbtestcaserest.model.ExamResult;
 
+@Repository
 public interface ExamResultRepository extends JpaRepository<ExamResult, Integer> {
     @Query("SELECT DISTINCT er FROM ExamResult er JOIN FETCH er.course WHERE er.student.id = :studentId")
     List<ExamResult> findAllResultsByStudentId(@Param("studentId") int studentId);

@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin("http://localhost:4200")
 @RequestMapping("/api")
 @AllArgsConstructor
 public class StudentRestController {

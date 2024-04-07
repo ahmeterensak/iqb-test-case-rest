@@ -19,7 +19,7 @@ import com.aes.iqbtestcaserest.service.ICourseService;
 import lombok.AllArgsConstructor;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin("http://localhost:4200")
 @RequestMapping("/api")
 @AllArgsConstructor
 public class CourseRestController {
